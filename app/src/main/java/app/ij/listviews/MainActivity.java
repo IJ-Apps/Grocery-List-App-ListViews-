@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // function to read grocery list from file and load it into ListView
-    public void loadContent(){
+    public void loadContent() {
         File path = getApplicationContext().getFilesDir();
         File readFrom = new File(path, "list.txt");
         byte[] content = new byte[(int) readFrom.length()];
@@ -110,7 +110,11 @@ public class MainActivity extends AppCompatActivity {
             s = s.substring(1, s.length() - 1);
             String split[] = s.split(", ");
 
-            items = new ArrayList<>(Arrays.asList(split));
+            // There may be no items in the grocery list.
+            if (split.length == 1 && split[0].isEmpty())
+                items = new ArrayList<>();
+            else items = new ArrayList<>(Arrays.asList(split));
+
             adapter = new ListViewAdapter(this, items);
             listView.setAdapter(adapter);
         } catch (Exception e) {
@@ -147,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
     // function to make a Toast given a string
     static Toast t;
+
     private static void makeToast(String s) {
         if (t != null) t.cancel();
         t = Toast.makeText(context, s, Toast.LENGTH_SHORT);
